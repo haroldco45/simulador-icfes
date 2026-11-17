@@ -6,22 +6,16 @@
   "area": null
  },
  {
+  "id": "y6KPlmLJUkI",
+  "titulo": "Caja de Herramientas Saber 11",
+  "canal": "Cote Bautista",
+  "area": null
+ },
+ {
   "id": "QxdV5n2TExg",
   "titulo": "Caja de herramientas para estudiantes próximos a presentar la prueba Saber 11",
   "canal": "Ministerio de Educación Nacional",
   "area": null
- },
- {
-  "id": "hya055CjFiY",
-  "titulo": "Conozca la herramienta virtual del ICFES para las pruebas Saber 11 | Noticias Caracol",
-  "canal": "Noticias Caracol",
-  "area": null
- },
- {
-  "id": "jjO21znJdiE",
-  "titulo": "Guía para resolver las preguntas de lectura crítica del ICFES",
-  "canal": "Sergio Perez",
-  "area": "lc"
  },
  {
   "id": "u6kGfRqqFvc",
@@ -30,15 +24,21 @@
   "area": "lc"
  },
  {
-  "id": "Ut2X-Nd5h-E",
-  "titulo": "100/100 en matemáticas - ICFES SABER 11°",
-  "canal": "Aprende con Maye",
+  "id": "jjO21znJdiE",
+  "titulo": "Guía para resolver las preguntas de lectura crítica del ICFES",
+  "canal": "Sergio Perez",
+  "area": "lc"
+ },
+ {
+  "id": "juo9Izl1J70",
+  "titulo": "¿Cómo resolver preguntas de Matemáticas en el ICFES? Método efectivo",
+  "canal": "Praxis Thinks",
   "area": "mat"
  },
  {
-  "id": "tx2zWJIzaBg",
-  "titulo": "🔥 ICFES SABER 11 MATEMÁTICAS | 50 Preguntas con Respuestas y Explicación Paso a Paso",
-  "canal": "Curiosidad en Datos",
+  "id": "Ut2X-Nd5h-E",
+  "titulo": "100/100 en matemáticas - ICFES SABER 11°",
+  "canal": "Aprende con Maye",
   "area": "mat"
  },
  {
@@ -49,20 +49,38 @@
  },
  {
   "id": "fRICy7KXvoo",
-  "titulo": "Preguntas de CIENCIAS SOCIALES Y CIUDADANAS - ICFES 2026 ✅",
+  "titulo": "Preguntas de CIENCIAS SOCIALES Y CIUDADANAS - ICFES 2026",
   "canal": "Aprende con Maye",
   "area": "soc"
  },
  {
   "id": "OQWS4-6FOt4",
-  "titulo": "Preguntas de CIENCIAS NATURALES -  ICFES 2026 ✅",
+  "titulo": "Preguntas de CIENCIAS NATURALES - ICFES 2026",
   "canal": "Aprende con Maye",
   "area": "cn"
  },
  {
   "id": "p3NF3HWFsP0",
-  "titulo": "Preguntas - Ciencias Naturales ICFES 2026  🚀😱",
+  "titulo": "Preguntas - Ciencias Naturales ICFES 2026",
   "canal": "Aprende con Maye",
   "area": "cn"
+ },
+ {
+  "id": "nrAgMic77jw",
+  "titulo": "Prueba de inglés ICFES Saber 11 explicada desde cero | Guía 2026",
+  "canal": "Teacher Mora",
+  "area": "ing"
+ },
+ {
+  "id": "X2vETTMLctI",
+  "titulo": "Clase EN VIVO de Inglés para el ICFES (Prueba Saber 11°) | #SemanaICFES",
+  "canal": "Filadd Colombia",
+  "area": "ing"
+ },
+ {
+  "id": "UTTMp6Ry_3U",
+  "titulo": "1. Avisos: Pruebas saber 11 inglés",
+  "canal": "Inglés con Jhoan",
+  "area": "ing"
  }
 ]
