@@ -1,1 +1,27 @@
-[]
+[
+ {
+  "archivo": "fotos/foto1.jpg",
+  "credito": "Foto: Icfes / El Colombiano",
+  "fuente": "https://www.elcolombiano.com/colombia/educacion/prueba-saber-11-icfes-presentar-examen-HL39106166"
+ },
+ {
+  "archivo": "fotos/foto2.jpg",
+  "credito": "Foto: Alcaldía de Bogotá",
+  "fuente": "https://bogota.gov.co/mi-ciudad/educacion/mas-de-650-mil-personas-presentaran-pruebas-de-estado-el-26-de-julio"
+ },
+ {
+  "archivo": "fotos/foto3.jpg",
+  "credito": "Foto: Icfes / El País",
+  "fuente": "https://www.elpais.com.co/colombia/icfes-saber-11-2026-esta-es-la-fecha-de-publicacion-de-resultados-y-como-consultarlos-2758.html"
+ },
+ {
+  "archivo": "fotos/foto4.jpg",
+  "credito": "Foto: Icfes / Alcaldía de Bogotá",
+  "fuente": "https://bogota.gov.co/mi-ciudad/educacion/presentacion-de-las-pruebas-saber-11-calendario-b-en-bogota-2026"
+ },
+ {
+  "archivo": "fotos/foto5.jpg",
+  "credito": "Foto: Icfes / Noticias RCN",
+  "fuente": "https://www.noticiasrcn.com/economia/presenta-las-pruebas-saber-11-lo-que-debe-llevar-y-lo-que-no-puede-ingresar-al-icfes-1043202"
+ }
+]
