@@ -1,0 +1,32 @@
+name: Fotos reales y videos
+on:
+  push:
+    paths: ['.github/workflows/recursos.yml', 'tools/recursos.py']
+  schedule:
+    - cron: '17 11 * * 1'   # lunes 6:17 a. m. hora de Colombia: refresca la lista de videos
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  recursos:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - name: Preparar
+        run: |
+          pip install pillow
+          curl -fsSL -o tools/BarlowCondensed-ExtraBold.ttf https://github.com/google/fonts/raw/main/ofl/barlowcondensed/BarlowCondensed-ExtraBold.ttf || true
+      - name: Fotos reales, vista previa y videos
+        run: |
+          if [ "${{ github.event_name }}" = "schedule" ]; then python tools/recursos.py videos; else python tools/recursos.py todo; fi
+          ls -la fotos; cat videos.json | head -40
+      - name: Guardar en el repositorio
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
+          rm -f tools/BarlowCondensed-ExtraBold.ttf
+          git add fotos og.png videos.json
+          git commit -m "Robot: fotos reales, vista previa del enlace y videos del Saber 11" || echo "sin cambios"
+          git push

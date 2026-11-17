@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Rumbo al ICFES — Simulador Saber 11</title>
+<meta name="description" content="Simulador gratuito de la prueba Saber 11 del Icfes: simulacros con reloj, práctica por área, puntaje estimado sobre 500, plan de estudio y videos. Las preguntas cambian en cada intento.">
+<meta name="theme-color" content="#1b1446">
+<link rel="canonical" href="https://simulador-icfes.netlify.app/">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Vibras Positivas HM">
+<meta property="og:title" content="Rumbo al ICFES — Simulador Saber 11">
+<meta property="og:description" content="Practica la prueba Saber 11 con simulacros que cambian en cada intento. Lectura Crítica, Matemáticas, Sociales, Ciencias e Inglés. Gratis.">
+<meta property="og:url" content="https://simulador-icfes.netlify.app/">
+<meta property="og:image" content="https://simulador-icfes.netlify.app/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Rumbo al ICFES — Simulador Saber 11">
+<meta name="twitter:description" content="Simulacros Saber 11 con reloj, puntaje estimado sobre 500 y plan de estudio. Gratis.">
+<meta name="twitter:image" content="https://simulador-icfes.netlify.app/og.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink0:#1b1446; --ink1:#2a2070; --vio:#5b3df5; --vio2:#7c63ff; --sun:#ffb81c; --sun2:#ffd36b;
+  --ok:#14a66b; --bad:#e0483e;
+  --bg:#f5f4fb; --card:#fff; --ink:#15122e; --muted:#625f7c; --line:#e3e0f2; --soft:#efecff;
+  --lc:#e85d75; --mat:#2f80ed; --soc:#f2994a; --cn:#27ae60; --ing:#9b51e0;
+  --r:18px; --sh:0 12px 34px rgba(27,20,70,.12);
+}
+@media (prefers-color-scheme: dark){ :root{ --bg:#0d0b1f; --card:#17142f; --ink:#efedff; --muted:#a7a3c7; --line:#2a2650; --soft:#211d45; } }
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5;overflow-x:hidden}
+h1,h2,h3,.cond{font-family:'Barlow Condensed',sans-serif;letter-spacing:.3px}
+button,select,input{font:inherit}
+button{cursor:pointer;border:0}
+a{color:var(--vio2)}
+.hide{display:none!important}
+
+.top{position:sticky;top:0;z-index:50;background:rgba(27,20,70,.93);backdrop-filter:blur(10px);color:#fff}
+.top .in{max-width:1100px;margin:auto;display:flex;align-items:center;gap:12px;padding:10px 16px}
+.brand{font-family:'Barlow Condensed';font-weight:800;font-size:23px;letter-spacing:1px;flex:1;cursor:pointer}
+.brand span{color:var(--sun)}
+.lang{display:flex;background:rgba(255,255,255,.12);border-radius:30px;padding:3px}
+.lang button{background:none;color:#fff;padding:5px 12px;border-radius:30px;font-weight:700;font-size:13px}
+.lang button.on{background:var(--sun);color:var(--ink0)}
+.nav{max-width:1100px;margin:auto;display:flex;gap:6px;overflow-x:auto;padding:0 16px 10px;scrollbar-width:none}
+.nav::-webkit-scrollbar{display:none}
+.nav button{background:rgba(255,255,255,.08);color:#d9d4ff;padding:8px 14px;border-radius:30px;font-weight:600;font-size:14px;white-space:nowrap;transition:.25s}
+.nav button.on{background:#fff;color:var(--ink0)}
+
+.hero{position:relative;height:min(80vh,620px);min-height:460px;overflow:hidden;color:#fff;background:linear-gradient(130deg,var(--ink0),var(--vio))}
+.slide{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transform:scale(1.08);transition:opacity 1.6s ease,transform 7s ease}
+.slide.on{opacity:1;transform:scale(1)}
+.hero::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(27,20,70,.25) 0%,rgba(27,20,70,.55) 45%,rgba(27,20,70,.95) 100%)}
+.hero .tx{position:absolute;z-index:2;left:0;right:0;bottom:0;max-width:1100px;margin:auto;padding:28px 18px 34px}
+.tag{display:inline-block;background:var(--sun);color:var(--ink0);font-weight:800;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;padding:5px 12px;border-radius:30px}
+.hero h1{font-size:clamp(42px,9vw,82px);line-height:.95;margin:12px 0 10px;text-transform:uppercase}
+.hero h1 span{color:var(--sun)}
+.hero p{max-width:620px;font-size:17px;opacity:.95}
+.cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 22px;border-radius:14px;font-weight:800;font-size:15px;transition:transform .15s,box-shadow .2s;text-decoration:none}
+.btn:active{transform:scale(.97)}
+.b1{background:var(--sun);color:var(--ink0);box-shadow:0 8px 22px rgba(255,184,28,.35)}
+.b2{background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.3)}
+.b3{background:var(--vio);color:#fff}
+.b4{background:var(--soft);color:var(--ink)}
+.credit{position:absolute;z-index:2;right:12px;top:10px;font-size:11px;opacity:.75}
+.dots{position:absolute;z-index:2;right:18px;bottom:18px;display:flex;gap:6px}
+.dots i{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.4)}
+.dots i.on{background:var(--sun);width:22px;border-radius:6px}
+
+.ticker{background:var(--sun);color:var(--ink0);overflow:hidden;white-space:nowrap;font-weight:700;font-size:14px}
+.ticker div{display:inline-block;padding:9px 0;animation:tk 38s linear infinite}
+.ticker span{margin:0 26px}
+@keyframes tk{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+main{max-width:1100px;margin:auto;padding:20px 16px 50px}
+.view{display:none;animation:fade .45s ease}
+.view.on{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+h2{font-size:36px;line-height:1;margin:14px 0 6px;text-transform:uppercase}
+h2 span{color:var(--vio)}
+.lead{color:var(--muted);margin-bottom:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px;box-shadow:var(--sh)}
+.grid{display:grid;gap:14px}
+@media(min-width:700px){.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}.g5{grid-template-columns:repeat(5,1fr)}}
+.g5{grid-template-columns:repeat(2,1fr)}
+
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:-46px 0 18px;position:relative;z-index:3}
+@media(min-width:700px){.stats{grid-template-columns:repeat(4,1fr)}}
+.stat{background:var(--card);border-radius:16px;padding:16px;box-shadow:var(--sh);border:1px solid var(--line)}
+.stat b{display:block;font-family:'Barlow Condensed';font-size:40px;line-height:1;color:var(--vio)}
+.stat small{color:var(--muted);font-weight:600}
+
+.area{position:relative;border-radius:18px;padding:18px 16px;color:#fff;overflow:hidden;cursor:pointer;min-height:130px;transition:transform .2s;display:flex;flex-direction:column;justify-content:flex-end}
+.area:hover{transform:translateY(-4px)}
+.area::before{content:'';position:absolute;right:-30px;top:-30px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.16)}
+.area h3{font-size:24px;line-height:1.05;position:relative}
+.area p{font-size:13px;opacity:.92;position:relative}
+.a-lc{background:linear-gradient(140deg,#e85d75,#b8325a)}.a-mat{background:linear-gradient(140deg,#2f80ed,#1a4fb0)}
+.a-soc{background:linear-gradient(140deg,#f2994a,#c96a1c)}.a-cn{background:linear-gradient(140deg,#27ae60,#13784a)}.a-ing{background:linear-gradient(140deg,#9b51e0,#6a2fb0)}
+
+.modes{display:grid;gap:12px}
+@media(min-width:700px){.modes{grid-template-columns:repeat(3,1fr)}}
+.mode{border:2px solid var(--line);border-radius:18px;padding:18px;background:var(--card);cursor:pointer;transition:.2s}
+.mode:hover,.mode.on{border-color:var(--vio);box-shadow:0 10px 26px rgba(91,61,245,.18)}
+.mode b{font-family:'Barlow Condensed';font-size:26px;display:block}
+.mode .big{font-family:'Barlow Condensed';font-size:46px;color:var(--vio);line-height:1}
+.mode small{color:var(--muted)}
+
+.exhead{position:sticky;top:96px;z-index:20;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:10px 14px;display:flex;align-items:center;gap:12px;box-shadow:var(--sh);margin-bottom:12px}
+.clock{font-family:'Barlow Condensed';font-size:30px;font-weight:800;min-width:86px}
+.bar{flex:1;height:8px;background:var(--soft);border-radius:8px;overflow:hidden}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--vio),var(--sun));transition:width .4s}
+.pill{display:inline-block;padding:4px 11px;border-radius:30px;font-size:12px;font-weight:800;color:#fff}
+.ctx{background:var(--soft);border-radius:14px;padding:14px;margin:12px 0;font-size:15px;max-height:340px;overflow:auto}
+.ctx p{margin:6px 0}
+.tb{border-collapse:collapse;margin:8px 0;font-size:14px;width:100%}
+.tb th,.tb td{border:1px solid var(--line);padding:6px 8px;text-align:left}
+.tb th{background:var(--card)}
+.sm{font-size:12px;color:var(--muted)}
+.qtext{font-size:18px;font-weight:700;margin:10px 0 14px}
+.opt{display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left;background:var(--card);border:2px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:9px;color:var(--ink);transition:.15s}
+.opt:hover{border-color:var(--vio2)}
+.opt .l{flex:0 0 30px;height:30px;border-radius:50%;background:var(--soft);display:grid;place-items:center;font-weight:800}
+.opt.sel{border-color:var(--vio);background:rgba(91,61,245,.08)}
+.opt.sel .l{background:var(--vio);color:#fff}
+.opt.ok{border-color:var(--ok);background:rgba(20,166,107,.1)}.opt.ok .l{background:var(--ok);color:#fff}
+.opt.no{border-color:var(--bad);background:rgba(224,72,62,.08)}.opt.no .l{background:var(--bad);color:#fff}
+.expl{border-left:4px solid var(--vio);background:var(--soft);padding:10px 14px;border-radius:10px;margin-top:6px}
+.navq{display:flex;gap:10px;justify-content:space-between;margin-top:12px;flex-wrap:wrap}
+.qgrid{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+.qgrid button{width:36px;height:36px;border-radius:10px;background:var(--soft);color:var(--ink);font-weight:700;font-size:13px}
+.qgrid button.d{background:var(--vio);color:#fff}
+.qgrid button.c{outline:3px solid var(--sun)}
+
+.score{display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+.ring{position:relative;width:170px;height:170px}
+.ring b{position:absolute;inset:0;display:grid;place-items:center;font-family:'Barlow Condensed';font-size:50px;line-height:1;text-align:center}
+.ring b small{display:block;font-size:15px;color:var(--muted);font-family:Inter}
+.arow{display:grid;grid-template-columns:150px 1fr 54px;gap:10px;align-items:center;margin:9px 0;font-size:14px}
+.arow .bar{height:12px}
+.lvl{font-size:12px;color:var(--muted)}
+label{display:block;font-weight:700;font-size:14px;margin:10px 0 4px}
+input,select{width:100%;padding:11px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.row>*{flex:1;min-width:130px}
+.chk{display:flex;flex-wrap:wrap;gap:8px}
+.chk label{display:flex;gap:6px;align-items:center;margin:0;background:var(--soft);padding:8px 12px;border-radius:30px;font-weight:600;cursor:pointer}
+.chk input{width:auto}
+.week{border-left:4px solid var(--vio);padding:8px 12px;margin:8px 0;background:var(--soft);border-radius:10px}
+.week b{font-family:'Barlow Condensed';font-size:20px}
+
+.vids{display:grid;gap:14px}
+@media(min-width:700px){.vids{grid-template-columns:repeat(3,1fr)}}
+.vid{border-radius:16px;overflow:hidden;background:#000;cursor:pointer;position:relative;aspect-ratio:16/9}
+.vid img{width:100%;height:100%;object-fit:cover;transition:transform .5s,opacity .3s;opacity:.85}
+.vid:hover img{transform:scale(1.06);opacity:1}
+.vid .cap{position:absolute;left:0;right:0;bottom:0;padding:26px 12px 10px;background:linear-gradient(transparent,rgba(0,0,0,.85));color:#fff;font-size:13px;font-weight:700}
+.vid .play{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);width:58px;height:58px;border-radius:50%;background:rgba(255,184,28,.95)}
+.vid .play::after{content:'';position:absolute;left:23px;top:17px;border-left:18px solid var(--ink0);border-top:12px solid transparent;border-bottom:12px solid transparent}
+.vid iframe{width:100%;height:100%;border:0}
+.tips{counter-reset:t}
+.tip{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--line)}
+.tip::before{counter-increment:t;content:counter(t,decimal-leading-zero);font-family:'Barlow Condensed';font-size:34px;font-weight:800;color:var(--vio);line-height:1;min-width:44px}
+.tip b{display:block}
+.photo-band{border-radius:20px;overflow:hidden;position:relative;min-height:220px;background:linear-gradient(130deg,var(--ink1),var(--vio)) center/cover;color:#fff;display:flex;align-items:flex-end;margin:18px 0}
+.photo-band::after{content:'';position:absolute;inset:0;background:linear-gradient(transparent 20%,rgba(27,20,70,.9))}
+.photo-band div{position:relative;z-index:2;padding:20px}
+.photo-band h3{font-size:32px;line-height:1}
+canvas{width:100%;height:220px}
+.hist{font-size:14px;border-bottom:1px solid var(--line);padding:9px 0;display:flex;justify-content:space-between;gap:10px}
+footer{background:var(--ink0);color:#cfc9ff;text-align:center;padding:30px 16px;font-size:14px}
+footer b{color:#fff}
+footer a{color:var(--sun)}
+.note{font-size:13px;color:var(--muted);background:var(--soft);border-radius:12px;padding:10px 14px;margin-top:12px}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(80px);background:var(--ink0);color:#fff;padding:12px 18px;border-radius:14px;font-weight:600;z-index:99;transition:.35s;opacity:0}
+.toast.on{transform:translateX(-50%);opacity:1}
+.pulse{animation:pu 2s infinite}
+@keyframes pu{0%,100%{box-shadow:0 0 0 0 rgba(255,184,28,.55)}50%{box-shadow:0 0 0 12px rgba(255,184,28,0)}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="in">
+    <div class="brand" onclick="go('inicio')">RUMBO AL <span>ICFES</span></div>
+    <div class="lang"><button id="lES" class="on" onclick="setLang('es')">ES</button><button id="lEN" onclick="setLang('en')">EN</button></div>
+  </div>
+  <nav class="nav" id="nav"></nav>
+</header>
+
+<section class="hero" id="hero">
+  <div id="slides"></div>
+  <div class="credit" id="credit"></div>
+  <div class="tx">
+    <span class="tag" data-i="tag">Saber 11 · Gratis</span>
+    <h1 data-i="h1">Tu puntaje <span>empieza hoy</span></h1>
+    <p data-i="heroP">Simulacros con reloj, práctica por área y puntaje estimado sobre 500. Cada intento trae preguntas distintas.</p>
+    <div class="cta">
+      <button class="btn b1 pulse" onclick="go('simulacro')" data-i="ctaSim">Hacer un simulacro</button>
+      <button class="btn b2" onclick="go('practica')" data-i="ctaPrac">Practicar por área</button>
+    </div>
+  </div>
+  <div class="dots" id="dots"></div>
+</section>
+<div class="ticker"><div id="tick"></div></div>
+
+<main>
+<!-- INICIO -->
+<section class="view on" id="v-inicio">
+  <div class="stats">
+    <div class="stat"><b id="s1">0</b><small data-i="st1">preguntas en el banco</small></div>
+    <div class="stat"><b id="s2">0</b><small data-i="st2">generadores de preguntas nuevas</small></div>
+    <div class="stat"><b>5</b><small data-i="st3">pruebas del examen</small></div>
+    <div class="stat"><b>500</b><small data-i="st4">puntaje global máximo</small></div>
+  </div>
+  <h2 data-i="areasT">Las 5 <span>pruebas</span></h2>
+  <p class="lead" data-i="areasL">Toca una para practicar. En el examen real son 302 preguntas en dos sesiones.</p>
+  <div class="grid g5" id="areaCards"></div>
+  <div class="photo-band" id="band1"><div><h3 data-i="bandT">Cómo se calcula tu puntaje</h3><p data-i="bandP">Lectura Crítica, Matemáticas, Sociales y Ciencias pesan 3 cada una; Inglés pesa 1. El promedio ponderado se multiplica por 5.</p></div></div>
+  <div class="grid g2">
+    <div class="card"><h3 class="cond" style="font-size:24px" data-i="howT">Así funciona</h3>
+      <div class="tips" id="howList"></div></div>
+    <div class="card"><h3 class="cond" style="font-size:24px" data-i="lastT">Tu último resultado</h3><div id="lastRes"></div></div>
+  </div>
+</section>
+
+<!-- SIMULACRO -->
+<section class="view" id="v-simulacro">
+  <div id="simStart">
+    <h2 data-i="simT">Simulacro <span>Saber 11</span></h2>
+    <p class="lead" data-i="simL">Escoge la duración. Las preguntas se reparten como en el examen real y cambian en cada intento.</p>
+    <div class="modes" id="modes"></div>
+    <div id="oneArea" class="card hide" style="margin-top:12px"><label data-i="pickA">Escoge la prueba</label><select id="selArea"></select></div>
+    <div style="margin-top:16px"><button class="btn b3" onclick="startExam()" data-i="start">Empezar</button></div>
+    <p class="note" data-i="qNote">Las preguntas están en español, como en el examen real; la prueba de Inglés va en inglés. Son preguntas de práctica tipo Saber 11, no preguntas oficiales.</p>
+  </div>
+  <div id="exam" class="hide"></div>
+</section>
+
+<!-- PRÁCTICA -->
+<section class="view" id="v-practica">
+  <div id="pracStart">
+    <h2 data-i="pracT">Práctica <span>por área</span></h2>
+    <p class="lead" data-i="pracL">Sin reloj. Ves la respuesta y la explicación apenas contestas.</p>
+    <div class="grid g5" id="pracCards"></div>
+  </div>
+  <div id="prac" class="hide"></div>
+</section>
+
+<!-- CALCULADORA -->
+<section class="view" id="v-puntaje">
+  <h2 data-i="calcT">Calcula tu <span>puntaje global</span></h2>
+  <p class="lead" data-i="calcL">Escribe tu puntaje de 0 a 100 en cada prueba (de un simulacro o de tu resultado oficial).</p>
+  <div class="card">
+    <div class="row" id="calcIn"></div>
+    <div style="margin-top:14px"><button class="btn b3" onclick="calc()" data-i="calcB">Calcular</button></div>
+    <div id="calcOut" style="margin-top:16px"></div>
+    <p class="note" data-i="calcN">Fórmula: [(LC + MAT + SOC + CN) × 3 + ING] ÷ 13 × 5. Los niveles de desempeño son de referencia aproximada.</p>
+  </div>
+</section>
+
+<!-- PLAN -->
+<section class="view" id="v-plan">
+  <h2 data-i="planT">Plan de <span>estudio</span></h2>
+  <p class="lead" data-i="planL">Dinos cuándo presentas y cuánto tiempo tienes. El plan le da más horas a lo que más te cuesta.</p>
+  <div class="card">
+    <div class="row">
+      <div><label data-i="pDate">Fecha del examen</label><input type="date" id="pDate"></div>
+      <div><label data-i="pHours">Horas de estudio por día</label><select id="pHours"><option>1</option><option selected>2</option><option>3</option><option>4</option></select></div>
+      <div><label data-i="pDays">Días por semana</label><select id="pDays"><option>3</option><option>4</option><option selected>5</option><option>6</option></select></div>
+    </div>
+    <label data-i="pWeak">Áreas que más te cuestan</label>
+    <div class="chk" id="pWeakBox"></div>
+    <div style="margin-top:14px"><button class="btn b3" onclick="makePlan()" data-i="pMake">Armar mi plan</button></div>
+    <div id="planOut"></div>
+  </div>
+</section>
+
+<!-- VIDEOS -->
+<section class="view" id="v-videos">
+  <h2 data-i="vidT">Videos <span>para estudiar</span></h2>
+  <p class="lead" data-i="vidL">Clases y explicaciones del Saber 11 en YouTube. Se cargan solo al tocarlas para no gastar datos. La lista se actualiza sola cada semana.</p>
+  <div class="vids" id="vids"></div>
+</section>
+
+<!-- CONSEJOS -->
+<section class="view" id="v-consejos">
+  <h2 data-i="tipT">El día <span>del examen</span></h2>
+  <div class="photo-band" id="band2"><div><h3 data-i="tipH">Llega descansado y con tiempo</h3><p data-i="tipP">El examen tiene dos sesiones de cerca de cuatro horas y media cada una.</p></div></div>
+  <div class="card tips" id="tips"></div>
+  <p class="note"><span data-i="tipSrc">Revisa siempre tu citación y las fechas oficiales en</span> <a href="https://www.icfes.gov.co" target="_blank" rel="noopener">icfes.gov.co</a>.</p>
+</section>
+
+<!-- PROGRESO -->
+<section class="view" id="v-progreso">
+  <h2 data-i="progT">Mi <span>progreso</span></h2>
+  <p class="lead" data-i="progL">Todo queda guardado solo en tu celular. Hora de Colombia.</p>
+  <div class="grid g2">
+    <div class="card"><h3 class="cond" style="font-size:22px" data-i="progG">Puntaje global estimado</h3><canvas id="chart" width="600" height="220"></canvas></div>
+    <div class="card"><h3 class="cond" style="font-size:22px" data-i="progA">Promedio por prueba</h3><div id="progAreas"></div></div>
+  </div>
+  <div class="card" style="margin-top:14px"><h3 class="cond" style="font-size:22px" data-i="progH">Historial</h3><div id="histList"></div>
+    <div style="margin-top:12px"><button class="btn b4" onclick="resetAll()" data-i="reset">Borrar mi historial</button></div></div>
+</section>
+</main>
+
+<footer>
+  <p><b>Rumbo al ICFES</b> · <span data-i="ftDev">Desarrollada por</span> <b>Vibras Positivas HM</b> — <span data-i="ftRights">Derechos de Autor Reservados</span></p>
+  <p>Caucasia, Antioquia · <a href="https://vibraspositivashm.com" target="_blank" rel="noopener">vibraspositivashm.com</a> · WhatsApp <a href="https://wa.me/573117700431" target="_blank" rel="noopener">311 770 0431</a></p>
+  <p style="margin-top:8px;font-size:12px;opacity:.75" data-i="ftNote">Herramienta independiente de práctica. No es un producto oficial ni está avalada por el Icfes.</p>
+</footer>
+<div class="toast" id="toast"></div>
+
+<script src="preguntas.js"></script>
+<script>
+const $ = s => document.querySelector(s);
+const store = { get(k, d){ try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch(e){ return d; } }, set(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} } };
+let L = store.get('ri_lang', 'es');
+const ORDER = ['lc','mat','soc','cn','ing'];
+const LETTERS = ['A','B','C','D'];
+
+const I18N = {
+ es:{tag:'Saber 11 · Gratis',h1:'Tu puntaje <span>empieza hoy</span>',heroP:'Simulacros con reloj, práctica por área y puntaje estimado sobre 500. Cada intento trae preguntas distintas.',ctaSim:'Hacer un simulacro',ctaPrac:'Practicar por área',
+  st1:'preguntas en el banco',st2:'generadores de preguntas nuevas',st3:'pruebas del examen',st4:'puntaje global máximo',areasT:'Las 5 <span>pruebas</span>',areasL:'Toca una para practicar. En el examen real son 302 preguntas en dos sesiones.',
+  bandT:'Cómo se calcula tu puntaje',bandP:'Lectura Crítica, Matemáticas, Sociales y Ciencias pesan 3 cada una; Inglés pesa 1. El promedio ponderado se multiplica por 5.',howT:'Así funciona',lastT:'Tu último resultado',
+  simT:'Simulacro <span>Saber 11</span>',simL:'Escoge la duración. Las preguntas se reparten como en el examen real y cambian en cada intento.',pickA:'Escoge la prueba',start:'Empezar',
+  qNote:'Las preguntas están en español, como en el examen real; la prueba de Inglés va en inglés. Son preguntas de práctica tipo Saber 11, no preguntas oficiales.',
+  pracT:'Práctica <span>por área</span>',pracL:'Sin reloj. Ves la respuesta y la explicación apenas contestas.',calcT:'Calcula tu <span>puntaje global</span>',calcL:'Escribe tu puntaje de 0 a 100 en cada prueba (de un simulacro o de tu resultado oficial).',calcB:'Calcular',
+  calcN:'Fórmula: [(LC + MAT + SOC + CN) × 3 + ING] ÷ 13 × 5. Los niveles de desempeño son de referencia aproximada.',planT:'Plan de <span>estudio</span>',planL:'Dinos cuándo presentas y cuánto tiempo tienes. El plan le da más horas a lo que más te cuesta.',
+  pDate:'Fecha del examen',pHours:'Horas de estudio por día',pDays:'Días por semana',pWeak:'Áreas que más te cuestan',pMake:'Armar mi plan',vidT:'Videos <span>para estudiar</span>',
+  vidL:'Clases y explicaciones del Saber 11 en YouTube. Se cargan solo al tocarlas para no gastar datos. La lista se actualiza sola cada semana.',tipT:'El día <span>del examen</span>',tipH:'Llega descansado y con tiempo',tipP:'El examen tiene dos sesiones de cerca de cuatro horas y media cada una.',tipSrc:'Revisa siempre tu citación y las fechas oficiales en',
+  progT:'Mi <span>progreso</span>',progL:'Todo queda guardado solo en tu celular. Hora de Colombia.',progG:'Puntaje global estimado',progA:'Promedio por prueba',progH:'Historial',reset:'Borrar mi historial',
+  ftDev:'Desarrollada por',ftRights:'Derechos de Autor Reservados',ftNote:'Herramienta independiente de práctica. No es un producto oficial ni está avalada por el Icfes.',
+  nav:{inicio:'Inicio',simulacro:'Simulacro',practica:'Práctica',puntaje:'Mi puntaje',plan:'Plan de estudio',videos:'Videos',consejos:'Día del examen',progreso:'Mi progreso'},
+  modes:[['Rápido','preguntas','minutos','Para un rato libre'],['Completo','preguntas','minutos','Las 5 pruebas en proporción real'],['Una prueba','preguntas','minutos','Concéntrate en un área']],
+  q:'Pregunta',of:'de',prev:'Anterior',next:'Siguiente',finish:'Terminar',sure:'Te faltan {n} preguntas sin responder. ¿Terminar de todas formas?',timeUp:'Se acabó el tiempo',
+  global:'Puntaje global estimado',outOf:'de 500',level:'Nivel',review:'Revisar respuestas',again:'Otro simulacro',back:'Volver',correct:'Correcta',yours:'Tu respuesta',blank:'Sin responder',
+  checkAns:'Ver explicación',endPrac:'Terminar práctica',pracDone:'Práctica terminada: {a} de {b} correctas',more:'10 más',noRes:'Aún no has hecho un simulacro. Empieza con el rápido: son 25 preguntas.',
+  how:[['Haz un simulacro','Rápido de 25 preguntas o completo de 65, con reloj.'],['Mira tu puntaje','Te damos un puntaje estimado por prueba y el global sobre 500.'],['Repasa tus errores','Cada pregunta trae su explicación.'],['Sigue tu plan','Te armamos un plan semanal según lo que más te cuesta.']],
+  weeks:'semanas',week:'Semana',hrs:'h',planNo:'Escoge una fecha futura.',planSum:'Tienes {w} semanas y unas {h} horas de estudio en total.',
+  planFocus:['Lectura de textos y preguntas de inferencia','Problemas con tablas, porcentajes y álgebra','Constitución, mecanismos de participación y análisis de casos','Experimentos, ecosistemas, química básica y física','Avisos, vocabulario, gramática y lectura'],
+  planLast:'Última semana: dos simulacros completos y repaso de errores. Nada nuevo la víspera.',vidNone:'Los videos se están cargando por primera vez. Mientras tanto puedes verlos en YouTube:',vidOpen:'Abrir en YouTube',
+  saved:'Guardado',sureReset:'¿Borrar todo tu historial?',lvlTxt:'Nivel {n} de 4',date:'Fecha',areasShort:'pruebas',seen:'Ya has visto {a} de {b} preguntas del banco.',genNew:'Nueva'},
+ en:{tag:'Saber 11 · Free',h1:'Your score <span>starts today</span>',heroP:'Timed mock exams, practice by subject and an estimated score out of 500. Every attempt brings different questions.',ctaSim:'Take a mock exam',ctaPrac:'Practice by subject',
+  st1:'questions in the bank',st2:'new-question generators',st3:'tests in the exam',st4:'maximum global score',areasT:'The 5 <span>tests</span>',areasL:'Tap one to practice. The real exam has 302 questions in two sessions.',
+  bandT:'How your score is calculated',bandP:'Critical Reading, Math, Social Studies and Science weigh 3 each; English weighs 1. The weighted average is multiplied by 5.',howT:'How it works',lastT:'Your latest result',
+  simT:'Saber 11 <span>mock exam</span>',simL:'Choose the length. Questions are split like the real exam and change every attempt.',pickA:'Choose the test',start:'Start',
+  qNote:'Questions are in Spanish, as in the real exam; the English test is in English. These are Saber 11–style practice questions, not official ones.',
+  pracT:'Practice <span>by subject</span>',pracL:'No timer. You see the answer and explanation right away.',calcT:'Calculate your <span>global score</span>',calcL:'Enter your 0–100 score for each test (from a mock exam or your official result).',calcB:'Calculate',
+  calcN:'Formula: [(CR + MATH + SOC + SCI) × 3 + ENG] ÷ 13 × 5. Performance levels are approximate references.',planT:'Study <span>plan</span>',planL:'Tell us when you take the exam and how much time you have. The plan gives more hours to what you find hardest.',
+  pDate:'Exam date',pHours:'Study hours per day',pDays:'Days per week',pWeak:'Subjects you find hardest',pMake:'Build my plan',vidT:'Videos <span>to study</span>',
+  vidL:'Saber 11 lessons and explanations on YouTube. They load only when tapped to save data. The list updates itself every week.',tipT:'Exam <span>day</span>',tipH:'Arrive rested and on time',tipP:'The exam has two sessions of about four and a half hours each.',tipSrc:'Always check your citation and official dates at',
+  progT:'My <span>progress</span>',progL:'Everything is saved only on your phone. Colombia time.',progG:'Estimated global score',progA:'Average by test',progH:'History',reset:'Delete my history',
+  ftDev:'Developed by',ftRights:'All Rights Reserved',ftNote:'Independent practice tool. Not an official product and not endorsed by Icfes.',
+  nav:{inicio:'Home',simulacro:'Mock exam',practica:'Practice',puntaje:'My score',plan:'Study plan',videos:'Videos',consejos:'Exam day',progreso:'My progress'},
+  modes:[['Quick','questions','minutes','For a free moment'],['Full','questions','minutes','All 5 tests in real proportion'],['One test','questions','minutes','Focus on one subject']],
+  q:'Question',of:'of',prev:'Previous',next:'Next',finish:'Finish',sure:'You have {n} unanswered questions. Finish anyway?',timeUp:'Time is up',
+  global:'Estimated global score',outOf:'out of 500',level:'Level',review:'Review answers',again:'Another mock exam',back:'Back',correct:'Correct',yours:'Your answer',blank:'Unanswered',
+  checkAns:'See explanation',endPrac:'End practice',pracDone:'Practice finished: {a} of {b} correct',more:'10 more',noRes:'You have not taken a mock exam yet. Start with the quick one: 25 questions.',
+  how:[['Take a mock exam','Quick with 25 questions or full with 65, timed.'],['See your score','You get an estimated score per test and a global score out of 500.'],['Review your mistakes','Every question has its explanation.'],['Follow your plan','We build a weekly plan based on what you find hardest.']],
+  weeks:'weeks',week:'Week',hrs:'h',planNo:'Choose a future date.',planSum:'You have {w} weeks and about {h} study hours in total.',
+  planFocus:['Reading texts and inference questions','Problems with tables, percentages and algebra','Constitution, participation mechanisms and case analysis','Experiments, ecosystems, basic chemistry and physics','Notices, vocabulary, grammar and reading'],
+  planLast:'Last week: two full mock exams and review of mistakes. Nothing new the day before.',vidNone:'Videos are loading for the first time. Meanwhile, watch them on YouTube:',vidOpen:'Open on YouTube',
+  saved:'Saved',sureReset:'Delete all your history?',lvlTxt:'Level {n} of 4',date:'Date',areasShort:'tests',seen:'You have seen {a} of {b} bank questions.',genNew:'New'}
+};
+const t = k => I18N[L][k] ?? I18N.es[k];
+const AN = a => AREAS[a][L];
+const COL = {lc:'var(--lc)',mat:'var(--mat)',soc:'var(--soc)',cn:'var(--cn)',ing:'var(--ing)'};
+const MODES = [{n:25,min:35},{n:65,min:95},{n:20,min:30,one:true}];
+let mode = 0;
+
+/* ---------- Fotos reales (descargadas por el robot de GitHub) ---------- */
+let FOTOS = [];
+fetch('fotos/creditos.json',{cache:'no-cache'}).then(r=>r.ok?r.json():[]).then(list=>{ FOTOS = list||[]; buildHero(); }).catch(()=>buildHero());
+let slideI = 0, slideT;
+function buildHero(){
+  const box = $('#slides'); if (!FOTOS.length){ return; }
+  box.innerHTML = FOTOS.map((f,i)=>`<div class="slide ${i?'':'on'}" style="background-image:url('${f.archivo}')"></div>`).join('');
+  $('#dots').innerHTML = FOTOS.map((_,i)=>`<i class="${i?'':'on'}"></i>`).join('');
+  $('#credit').textContent = FOTOS[0].credito || '';
+  const b1 = FOTOS[1] || FOTOS[0], b2 = FOTOS[2] || FOTOS[0];
+  $('#band1').style.backgroundImage = `url('${b1.archivo}')`; $('#band2').style.backgroundImage = `url('${b2.archivo}')`;
+  clearInterval(slideT);
+  slideT = setInterval(()=>{ const s = box.children, d = $('#dots').children; s[slideI].classList.remove('on'); d[slideI].classList.remove('on'); slideI = (slideI+1)%s.length; s[slideI].classList.add('on'); d[slideI].classList.add('on'); $('#credit').textContent = FOTOS[slideI].credito || ''; }, 5500);
+}
+
+/* ---------- Idioma y navegación ---------- */
+function setLang(l){ L = l; store.set('ri_lang', l); applyLang(); }
+function applyLang(){
+  document.documentElement.lang = L;
+  $('#lES').classList.toggle('on', L==='es'); $('#lEN').classList.toggle('on', L==='en');
+  document.querySelectorAll('[data-i]').forEach(el => { const v = I18N[L][el.dataset.i]; if (typeof v === 'string') el.innerHTML = v; });
+  renderNav(); renderAreaCards(); renderModes(); renderHow(); renderLast(); renderTicker(); renderCalcIn(); renderWeak(); renderTips(); renderVideos(); renderProg();
+  if (EX && !EX.done) drawExam(); if (PR) drawPrac();
+}
+function renderNav(){ $('#nav').innerHTML = Object.entries(t('nav')).map(([k,v])=>`<button id="n-${k}" onclick="go('${k}')" class="${cur===k?'on':''}">${v}</button>`).join(''); }
+let cur = 'inicio';
+function go(v){
+  cur = v; document.querySelectorAll('.view').forEach(s => s.classList.toggle('on', s.id === 'v-'+v));
+  renderNav(); $('#hero').classList.toggle('hide', v !== 'inicio'); document.querySelector('.ticker').classList.toggle('hide', v !== 'inicio');
+  if (v==='progreso') renderProg();
+  window.scrollTo({top:0,behavior:'smooth'}); history.replaceState(null,'','#'+v);
+}
+function toast(m){ const el = $('#toast'); el.textContent = m; el.classList.add('on'); setTimeout(()=>el.classList.remove('on'), 2200); }
+
+function renderAreaCards(){
+  const desc = { es:{lc:'Comprender, interpretar y evaluar textos',mat:'Interpretar, formular y argumentar',soc:'Pensamiento social y ciudadanía',cn:'Explicar fenómenos e indagar',ing:'Del nivel A− al B+'}, en:{lc:'Understand, interpret and evaluate texts',mat:'Interpret, formulate and argue',soc:'Social thinking and citizenship',cn:'Explain phenomena and inquire',ing:'From level A− to B+'} };
+  const html = ORDER.map(a => `<div class="area a-${a}" onclick="go('practica');startPrac('${a}')"><h3>${AN(a)}</h3><p>${desc[L][a]} · ${AREAS[a].real} ${L==='es'?'preguntas reales':'real questions'}</p></div>`).join('');
+  $('#areaCards').innerHTML = html; $('#pracCards').innerHTML = html.replaceAll(`go('practica');`, '');
+}
+function renderModes(){
+  $('#modes').innerHTML = MODES.map((m,i)=>{ const x = t('modes')[i]; return `<div class="mode ${i===mode?'on':''}" onclick="mode=${i};renderModes()"><b>${x[0]}</b><span class="big">${m.n}</span> ${x[1]} · ${m.min} ${x[2]}<br><small>${x[3]}</small></div>`; }).join('');
+  $('#oneArea').classList.toggle('hide', !MODES[mode].one);
+  $('#selArea').innerHTML = ORDER.map(a=>`<option value="${a}">${AN(a)}</option>`).join('');
+}
+function renderHow(){ $('#howList').innerHTML = t('how').map(h=>`<div class="tip"><div><b>${h[0]}</b>${h[1]}</div></div>`).join(''); }
+function renderTicker(){
+  const items = L==='es' ? ['302 preguntas en el examen real','Dos sesiones de cerca de 4 horas y media','Puntaje global de 0 a 500','Inglés se reporta de A− a B+','Una pregunta en blanco vale como una mala','Preguntas nuevas en cada intento','Desarrollada por Vibras Positivas HM']
+    : ['302 questions in the real exam','Two sessions of about 4.5 hours','Global score from 0 to 500','English is reported from A− to B+','A blank answer counts as a wrong one','New questions every attempt','Developed by Vibras Positivas HM'];
+  const s = items.map(x=>`<span>${x}</span>`).join(''); $('#tick').innerHTML = s + s;
+}
+function animNum(el, to){ let n = 0; const st = Math.max(1, Math.ceil(to/30)); const i = setInterval(()=>{ n = Math.min(to, n+st); el.textContent = n; if(n>=to) clearInterval(i); }, 25); }
+
+/* ---------- Selección de preguntas (rota y no repite) ---------- */
+const qKey = q => q.a + '|' + q.q.slice(0, 60);
+function shuffle(a){ for (let i = a.length-1; i > 0; i--){ const j = Math.floor(Math.random()*(i+1)); [a[i],a[j]] = [a[j],a[i]]; } return a; }
+function prep(q, gen){
+  const idx = shuffle([0,1,2,3]);
+  return { a:q.a, x:q.x, q:q.q, o:idx.map(i=>q.o[i]), c:idx.indexOf(0), e:q.e, gen };
+}
+function pickArea(a, n){
+  const out = [];
+  const gens = GENERADORES[a] || [];
+  let nGen = gens.length ? Math.round(n * 0.4) : 0;
+  const seen = new Set(store.get('ri_seen', []));
+  let pool = BANCO.filter(q => q.a === a);
+  let fresh = shuffle(pool.filter(q => !seen.has(qKey(q))));
+  if (fresh.length < n - nGen){
+    // Se agotó el área: se vuelve a empezar
+    const keep = [...seen].filter(k => !k.startsWith(a + '|')); store.set('ri_seen', keep);
+    fresh = shuffle(fresh.concat(shuffle(pool.filter(q => seen.has(qKey(q))))));
+  }
+  // Mantener juntos los textos: si sale una pregunta con contexto, se traen sus hermanas
+  const chosen = [];
+  for (const q of fresh){
+    if (chosen.length >= n - nGen) break;
+    if (chosen.includes(q)) continue;
+    if (q.x){ const sis = fresh.filter(s => s.x === q.x && !chosen.includes(s)).slice(0, Math.max(1, Math.min(4, n - nGen - chosen.length))); chosen.push(...sis); }
+    else chosen.push(q);
+  }
+  if (chosen.length < n - nGen) nGen = n - chosen.length;
+  chosen.forEach(q => out.push(prep(q, false)));
+  for (let i = 0; i < nGen && gens.length; i++){ const g = gens[(i + Math.floor(Math.random()*gens.length)) % gens.length](); out.push(prep({a, ...g}, true)); }
+  const s2 = new Set(store.get('ri_seen', [])); chosen.forEach(q => s2.add(qKey(q))); store.set('ri_seen', [...s2]);
+  // ordenar: contextos agrupados
+  const groups = {}; out.forEach(q => { const k = q.x || ('_' + Math.random()); (groups[k] = groups[k] || []).push(q); });
+  return shuffle(Object.values(groups)).flat().slice(0, n);
+}
+function seenCount(){ const s = new Set(store.get('ri_seen', [])); return BANCO.filter(q => s.has(qKey(q))).length; }
+
+/* ---------- Simulacro ---------- */
+let EX = null;
+function startExam(){
+  const m = MODES[mode]; let qs = [];
+  if (m.one){ qs = pickArea($('#selArea').value, m.n); }
+  else {
+    const tot = ORDER.reduce((s,a)=>s+AREAS[a].real,0); let left = m.n;
+    ORDER.forEach((a,i) => { const k = i === ORDER.length-1 ? left : Math.round(m.n * AREAS[a].real / tot); left -= k; qs.push(...pickArea(a, k)); });
+  }
+  EX = { qs, ans: Array(qs.length).fill(null), i: 0, end: Date.now() + m.min*60000, total: m.min*60, done:false, one: m.one ? $('#selArea').value : null };
+  $('#simStart').classList.add('hide'); $('#exam').classList.remove('hide');
+  clearInterval(EX.tk); EX.tk = setInterval(tick, 1000); drawExam();
+}
+function fmtT(s){ s = Math.max(0, Math.round(s)); const h = Math.floor(s/3600), m = Math.floor(s%3600/60), x = s%60; return (h? h+':' : '') + String(m).padStart(h?2:1,'0') + ':' + String(x).padStart(2,'0'); }
+function tick(){ if (!EX || EX.done) return; const left = (EX.end - Date.now())/1000; const c = $('#clk'); if (c){ c.textContent = fmtT(left); c.style.color = left < 300 ? 'var(--bad)' : ''; } if (left <= 0){ toast(t('timeUp')); finish(true); } }
+function drawExam(){
+  const q = EX.qs[EX.i], done = EX.ans.filter(x=>x!==null).length;
+  $('#exam').innerHTML = `
+  <div class="exhead"><div class="clock" id="clk">${fmtT((EX.end-Date.now())/1000)}</div><div class="bar"><i style="width:${done/EX.qs.length*100}%"></i></div><b>${done}/${EX.qs.length}</b></div>
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap"><span class="pill" style="background:${COL[q.a]}">${AN(q.a)}</span><small class="sm">${t('q')} ${EX.i+1} ${t('of')} ${EX.qs.length}${q.gen?' · '+t('genNew'):''}</small></div>
+    ${q.x ? `<div class="ctx">${CTX[q.x]}</div>` : ''}
+    <div class="qtext">${q.q}</div>
+    ${q.o.map((o,k)=>`<button class="opt ${EX.ans[EX.i]===k?'sel':''}" onclick="answer(${k})"><span class="l">${LETTERS[k]}</span><span>${o}</span></button>`).join('')}
+    <div class="navq"><button class="btn b4" onclick="move(-1)" ${EX.i?'':'disabled'}>${t('prev')}</button>
+      ${EX.i < EX.qs.length-1 ? `<button class="btn b3" onclick="move(1)">${t('next')}</button>` : ''}
+      <button class="btn b1" onclick="finish(false)">${t('finish')}</button></div>
+    <div class="qgrid">${EX.qs.map((_,k)=>`<button class="${EX.ans[k]!==null?'d':''} ${k===EX.i?'c':''}" onclick="jump(${k})">${k+1}</button>`).join('')}</div>
+  </div>`;
+}
+function answer(k){ EX.ans[EX.i] = k; drawExam(); if (EX.i < EX.qs.length-1){ const at = EX.i; setTimeout(()=>{ if (EX && !EX.done && EX.i === at) move(1); }, 280); } }
+function move(d){ EX.i = Math.min(EX.qs.length-1, Math.max(0, EX.i + d)); drawExam(); window.scrollTo({top:0,behavior:'smooth'}); }
+function jump(k){ EX.i = k; drawExam(); }
+function globalScore(per){ const g = ((per.lc + per.mat + per.soc + per.cn) * 3 + per.ing) / 13 * 5; return Math.round(g); }
+function finish(force){
+  const miss = EX.ans.filter(x=>x===null).length;
+  if (!force && miss && !confirm(t('sure').replace('{n}', miss))) return;
+  EX.done = true; clearInterval(EX.tk);
+  const per = {}, cnt = {};
+  ORDER.forEach(a => { cnt[a] = [0,0]; });
+  EX.qs.forEach((q,i) => { cnt[q.a][1]++; if (EX.ans[i] === q.c) cnt[q.a][0]++; });
+  ORDER.forEach(a => per[a] = cnt[a][1] ? Math.round(cnt[a][0]/cnt[a][1]*100) : null);
+  const full = ORDER.every(a => per[a] !== null);
+  const g = full ? globalScore(per) : null;
+  const hist = store.get('ri_hist', []);
+  hist.push({ f: Date.now(), m: EX.one ? 'one' : (EX.qs.length > 30 ? 'full' : 'quick'), g, per, ok: EX.qs.filter((q,i)=>EX.ans[i]===q.c).length, n: EX.qs.length });
+  store.set('ri_hist', hist.slice(-60));
+  showResult(g, per, cnt);
+}
+function level(a, v){ const n = NIVELES[a]; for (let i = 0; i < n.length; i++) if (v <= n[i][1]) return a === 'ing' ? n[i][2] : t('lvlTxt').replace('{n}', i+1); return ''; }
+function ring(v, max){ const p = v/max, r = 74, c = 2*Math.PI*r; return `<svg width="170" height="170"><circle cx="85" cy="85" r="${r}" fill="none" stroke="var(--soft)" stroke-width="14"/><circle cx="85" cy="85" r="${r}" fill="none" stroke="url(#gr)" stroke-width="14" stroke-linecap="round" stroke-dasharray="${c}" stroke-dashoffset="${c}" transform="rotate(-90 85 85)"><animate attributeName="stroke-dashoffset" from="${c}" to="${c*(1-p)}" dur="1.2s" fill="freeze"/></circle><defs><linearGradient id="gr"><stop offset="0" stop-color="#5b3df5"/><stop offset="1" stop-color="#ffb81c"/></linearGradient></defs></svg>`; }
+function showResult(g, per, cnt){
+  const rows = ORDER.filter(a => per[a] !== null).map(a => `<div class="arow"><b>${AN(a)}</b><div class="bar"><i style="width:${per[a]}%;background:${COL[a]}"></i></div><b>${per[a]}</b></div><div class="lvl" style="margin:-6px 0 6px 160px">${cnt[a][0]}/${cnt[a][1]} · ${level(a, per[a])}</div>`).join('');
+  const big = g !== null ? `<div class="ring">${ring(g,500)}<b>${g}<small>${t('outOf')}</small></b></div>` : `<div class="ring">${ring(per[EX.one],100)}<b>${per[EX.one]}<small>/100</small></b></div>`;
+  $('#exam').innerHTML = `<div class="card"><h2>${g!==null?t('global'):AN(EX.one)}</h2><div class="score">${big}<div style="flex:1;min-width:250px">${rows}</div></div>
+    <div class="navq"><button class="btn b3" onclick="reviewExam()">${t('review')}</button><button class="btn b1" onclick="backSim()">${t('again')}</button></div>
+    <p class="note">${t('qNote')}</p></div>`;
+  window.scrollTo({top:0,behavior:'smooth'}); renderLast();
+}
+function reviewExam(){
+  $('#exam').innerHTML = `<div class="navq" style="margin-bottom:12px"><button class="btn b4" onclick="backSim()">${t('back')}</button></div>` + EX.qs.map((q,i)=>`<div class="card" style="margin-bottom:12px">
+    <span class="pill" style="background:${COL[q.a]}">${AN(q.a)}</span> <small class="sm">${t('q')} ${i+1}</small>
+    ${q.x ? `<details><summary class="sm" style="cursor:pointer;margin-top:8px">${L==='es'?'Ver texto':'See text'}</summary><div class="ctx">${CTX[q.x]}</div></details>` : ''}
+    <div class="qtext">${q.q}</div>
+    ${q.o.map((o,k)=>`<div class="opt ${k===q.c?'ok':(EX.ans[i]===k?'no':'')}"><span class="l">${LETTERS[k]}</span><span>${o}</span></div>`).join('')}
+    ${EX.ans[i]===null?`<p class="sm">${t('blank')}</p>`:''}<div class="expl">${q.e}</div></div>`).join('');
+  window.scrollTo({top:0});
+}
+function backSim(){ EX = null; $('#exam').classList.add('hide'); $('#exam').innerHTML=''; $('#simStart').classList.remove('hide'); }
+
+/* ---------- Práctica ---------- */
+let PR = null;
+function startPrac(a){ PR = { a, qs: pickArea(a, 10), i:0, ans:null, ok:0 }; $('#pracStart').classList.add('hide'); $('#prac').classList.remove('hide'); drawPrac(); window.scrollTo({top:0}); }
+function drawPrac(){
+  const q = PR.qs[PR.i], an = PR.ans;
+  $('#prac').innerHTML = `<div class="card"><div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px"><span class="pill" style="background:${COL[q.a]}">${AN(q.a)}</span><small class="sm">${t('q')} ${PR.i+1} ${t('of')} ${PR.qs.length} · ${PR.ok} ${L==="es"?"correctas":"correct"}</small></div>
+    ${q.x ? `<div class="ctx">${CTX[q.x]}</div>` : ''}<div class="qtext">${q.q}</div>
+    ${q.o.map((o,k)=>`<button class="opt ${an===null?'':(k===q.c?'ok':(an===k?'no':''))}" ${an===null?`onclick="pracAns(${k})"`:''}><span class="l">${LETTERS[k]}</span><span>${o}</span></button>`).join('')}
+    ${an!==null?`<div class="expl">${q.e}</div>`:''}
+    <div class="navq"><button class="btn b4" onclick="endPrac()">${t('endPrac')}</button>${an!==null?`<button class="btn b3" onclick="pracNext()">${t('next')}</button>`:''}</div></div>`;
+}
+function pracAns(k){ PR.ans = k; if (k === PR.qs[PR.i].c) PR.ok++; drawPrac(); }
+function pracNext(){ if (PR.i < PR.qs.length-1){ PR.i++; PR.ans = null; drawPrac(); window.scrollTo({top:0,behavior:'smooth'}); return; }
+  $('#prac').innerHTML = `<div class="card"><h2>${t('pracDone').replace('{a}',PR.ok).replace('{b}',PR.qs.length)}</h2><div class="navq"><button class="btn b3" onclick="startPrac('${PR.a}')">${t('more')}</button><button class="btn b4" onclick="endPrac()">${t('back')}</button></div></div>`; }
+function endPrac(){ PR = null; $('#prac').classList.add('hide'); $('#pracStart').classList.remove('hide'); }
+
+/* ---------- Calculadora ---------- */
+function renderCalcIn(){ const v = store.get('ri_calc', {}); $('#calcIn').innerHTML = ORDER.map(a=>`<div><label>${AN(a)}</label><input type="number" min="0" max="100" id="c-${a}" value="${v[a] ?? ''}" placeholder="0-100"></div>`).join(''); }
+function calc(){
+  const per = {}; for (const a of ORDER){ const v = Number($('#c-'+a).value); if ($('#c-'+a).value === '' || v < 0 || v > 100){ $('#c-'+a).focus(); return; } per[a] = v; }
+  store.set('ri_calc', per); const g = globalScore(per);
+  $('#calcOut').innerHTML = `<div class="score"><div class="ring">${ring(g,500)}<b>${g}<small>${t('outOf')}</small></b></div><div style="flex:1;min-width:240px">${ORDER.map(a=>`<div class="arow"><b>${AN(a)}</b><div class="bar"><i style="width:${per[a]}%;background:${COL[a]}"></i></div><b>${per[a]}</b></div><div class="lvl" style="margin:-6px 0 6px 160px">${level(a,per[a])}</div>`).join('')}</div></div>`;
+}
+
+/* ---------- Plan de estudio ---------- */
+function renderWeak(){ const p = store.get('ri_plan', null); $('#pWeakBox').innerHTML = ORDER.map(a=>`<label><input type="checkbox" value="${a}" ${p && p.weak.includes(a)?'checked':''}> ${AN(a)}</label>`).join(''); if (p){ $('#pDate').value = p.date; $('#pHours').value = p.h; $('#pDays').value = p.d; drawPlan(p); } }
+function weakFromHistory(){ const h = store.get('ri_hist', []); const s = {}, n = {}; h.forEach(r => ORDER.forEach(a => { if (r.per[a] !== null && r.per[a] !== undefined){ s[a] = (s[a]||0) + r.per[a]; n[a] = (n[a]||0) + 1; } })); return ORDER.filter(a => n[a]).sort((x,y)=>s[x]/n[x]-s[y]/n[y]).slice(0,2); }
+function makePlan(){
+  let weak = [...document.querySelectorAll('#pWeakBox input:checked')].map(i=>i.value); if (!weak.length) weak = weakFromHistory();
+  const p = { date: $('#pDate').value, h: Number($('#pHours').value), d: Number($('#pDays').value), weak };
+  if (!p.date || new Date(p.date+'T08:00:00-05:00') <= new Date()){ $('#planOut').innerHTML = `<p class="note">${t('planNo')}</p>`; return; }
+  store.set('ri_plan', p); drawPlan(p); toast(t('saved'));
+}
+function drawPlan(p){
+  const now = new Date(), ex = new Date(p.date+'T08:00:00-05:00'); const w = Math.max(1, Math.ceil((ex - now)/(7*864e5)));
+  if (ex <= now){ $('#planOut').innerHTML = ''; return; }
+  const wt = {}; ORDER.forEach(a => wt[a] = AREAS[a].peso + (p.weak.includes(a) ? 2 : 0)); const sw = ORDER.reduce((s,a)=>s+wt[a],0);
+  const weekH = p.h * p.d;
+  let html = `<p class="note">${t('planSum').replace('{w}', w).replace('{h}', w*weekH)}</p>`;
+  const wk = Math.min(w, 16);
+  for (let i = 0; i < wk; i++){
+    const last = i === wk-1;
+    const startD = new Date(now.getTime() + i*7*864e5).toLocaleDateString(L==='es'?'es-CO':'en-US',{timeZone:'America/Bogota',day:'numeric',month:'short'});
+    const rot = ORDER[(i) % 5];
+    html += `<div class="week"><b>${t('week')} ${i+1}</b> <small class="sm">· ${startD}</small><br>${last ? t('planLast') : ORDER.map(a=>`<span class="pill" style="background:${COL[a]};margin:3px 4px 3px 0">${AN(a)} ${Math.max(1,Math.round(weekH*wt[a]/sw*10)/10)} ${t('hrs')}</span>`).join('') + `<br><small>${L==='es'?'Enfoque':'Focus'}: ${AN(rot)} — ${t('planFocus')[ORDER.indexOf(rot)]}. ${L==='es'?'Cierra la semana con un simulacro rápido.':'End the week with a quick mock exam.'}</small>`}</div>`;
+  }
+  if (w > 16) html += `<p class="sm">${L==='es'?'Repite el ciclo de 16 semanas hasta la fecha.':'Repeat the 16-week cycle until the date.'}</p>`;
+  $('#planOut').innerHTML = html;
+}
+
+/* ---------- Videos (videos.json lo llena el robot cada semana) ---------- */
+let VIDS = [];
+fetch('videos.json',{cache:'no-cache'}).then(r=>r.ok?r.json():[]).then(v=>{ VIDS = v||[]; renderVideos(); }).catch(()=>renderVideos());
+function renderVideos(){
+  const box = $('#vids'); if (!box) return;
+  if (!VIDS.length){ box.innerHTML = `<div class="card" style="grid-column:1/-1"><p>${t('vidNone')}</p><p style="margin-top:10px"><a class="btn b3" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=Icfes+Saber+11">${t('vidOpen')}</a></p></div>`; return; }
+  box.innerHTML = VIDS.map(v=>`<div><div class="vid" onclick="playVid(this,'${v.id}')"><img loading="lazy" src="https://i.ytimg.com/vi/${v.id}/hqdefault.jpg" alt=""><div class="play"></div><div class="cap">${v.titulo}</div></div><p class="sm" style="margin-top:6px">${v.area ? AN(v.area)+' · ' : ''}${v.canal||''}</p></div>`).join('');
+}
+function playVid(el, id){ el.onclick = null; el.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>`; }
+
+/* ---------- Consejos ---------- */
+function renderTips(){ $('#tips').innerHTML = CONSEJOS[L].map(c=>`<div class="tip"><div><b>${c[0]}</b>${c[1]}</div></div>`).join(''); }
+
+/* ---------- Progreso ---------- */
+const hora = ts => new Date(ts).toLocaleString(L==='es'?'es-CO':'en-US',{timeZone:'America/Bogota',day:'numeric',month:'short',hour:'numeric',minute:'2-digit'});
+function renderLast(){
+  const h = store.get('ri_hist', []); const r = h[h.length-1];
+  if (!r){ $('#lastRes').innerHTML = `<p class="lead">${t('noRes')}</p><button class="btn b3" onclick="mode=0;renderModes();go('simulacro')">${t('ctaSim')}</button>`; return; }
+  $('#lastRes').innerHTML = `<p class="sm">${hora(r.f)} · ${r.ok}/${r.n}</p>` + (r.g!==null?`<p><b class="cond" style="font-size:56px;color:var(--vio)">${r.g}</b> <span class="sm">${t('outOf')}</span></p>`:'') + ORDER.filter(a=>r.per[a]!==null&&r.per[a]!==undefined).map(a=>`<div class="arow"><b>${AN(a)}</b><div class="bar"><i style="width:${r.per[a]}%;background:${COL[a]}"></i></div><b>${r.per[a]}</b></div>`).join('') + `<p class="sm" style="margin-top:8px">${t('seen').replace('{a}',seenCount()).replace('{b}',BANCO.length)}</p>`;
+}
+function renderProg(){
+  const h = store.get('ri_hist', []);
+  $('#histList').innerHTML = h.length ? h.slice().reverse().map(r=>`<div class="hist"><span>${hora(r.f)}</span><span>${r.ok}/${r.n}</span><b>${r.g!==null?r.g+' / 500':ORDER.filter(a=>r.per[a]!==null).map(a=>AN(a)+' '+r.per[a]).join(', ')}</b></div>`).join('') : `<p class="lead">${t('noRes')}</p>`;
+  const s = {}, n = {}; h.forEach(r => ORDER.forEach(a => { if (r.per[a] !== null && r.per[a] !== undefined){ s[a]=(s[a]||0)+r.per[a]; n[a]=(n[a]||0)+1; } }));
+  $('#progAreas').innerHTML = ORDER.map(a=>{ const v = n[a] ? Math.round(s[a]/n[a]) : 0; return `<div class="arow"><b>${AN(a)}</b><div class="bar"><i style="width:${v}%;background:${COL[a]}"></i></div><b>${n[a]?v:'—'}</b></div>`; }).join('');
+  drawChart(h.filter(r=>r.g!==null).slice(-15));
+}
+function drawChart(d){
+  const c = $('#chart'); if (!c) return; const x = c.getContext('2d'), W = c.width, H = c.height; x.clearRect(0,0,W,H);
+  const dark = matchMedia('(prefers-color-scheme: dark)').matches; x.strokeStyle = dark ? '#2a2650' : '#e3e0f2'; x.fillStyle = dark ? '#a7a3c7' : '#625f7c'; x.font = '12px Inter';
+  for (let v = 0; v <= 500; v += 100){ const y = H-20 - v/500*(H-40); x.beginPath(); x.moveTo(36,y); x.lineTo(W-8,y); x.stroke(); x.fillText(v, 2, y+4); }
+  if (!d.length) return;
+  const px = i => 46 + (d.length===1 ? (W-60)/2 : i*(W-60)/(d.length-1)), py = v => H-20 - v/500*(H-40);
+  const gr = x.createLinearGradient(0,0,W,0); gr.addColorStop(0,'#5b3df5'); gr.addColorStop(1,'#ffb81c');
+  x.strokeStyle = gr; x.lineWidth = 4; x.beginPath(); d.forEach((r,i)=> i? x.lineTo(px(i),py(r.g)) : x.moveTo(px(i),py(r.g))); x.stroke();
+  d.forEach((r,i)=>{ x.fillStyle = '#5b3df5'; x.beginPath(); x.arc(px(i),py(r.g),5,0,7); x.fill(); x.fillStyle = dark?'#efedff':'#15122e'; x.fillText(r.g, px(i)-10, py(r.g)-10); });
+}
+function resetAll(){ if (!confirm(t('sureReset'))) return; store.set('ri_hist', []); store.set('ri_seen', []); renderProg(); renderLast(); }
+
+/* ---------- Arranque ---------- */
+applyLang();
+animNum($('#s1'), BANCO.length); animNum($('#s2'), Object.values(GENERADORES).reduce((s,g)=>s+g.length,0));
+const h0 = location.hash.slice(1); if (h0 && $('#v-'+h0)) go(h0);
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script>
+</body>
+</html>
