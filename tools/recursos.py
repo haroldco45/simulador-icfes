@@ -28,6 +28,7 @@ BUSQUEDAS = [
     ('Saber 11 sociales y ciudadanas preguntas resueltas', 'soc'),
     ('Saber 11 ciencias naturales preguntas resueltas', 'cn'),
     ('Saber 11 inglés preguntas resueltas', 'ing'),
+    ('ICFES inglés Saber 11 parte 1 avisos', 'ing'),
 ]
 
 
@@ -118,6 +119,13 @@ def og(creditos):
     print('og.png listo')
 
 
+EMOJI = re.compile('[\U0001F000-\U0001FFFF\u2600-\u27BF\u2B00-\u2BFF\uFE0F\u200D]')
+
+
+def limpio(t):
+    return re.sub(r'\s{2,}', ' ', EMOJI.sub('', t)).strip(' |-')
+
+
 def videos():
     out, vistos = [], set()
     for q, area in BUSQUEDAS:
@@ -144,14 +152,14 @@ def videos():
                 vid = v.get('videoId')
                 if not vid or vid in vistos:
                     continue
-                titulo = ''.join(r.get('text', '') for r in v.get('title', {}).get('runs', []))
+                titulo = limpio(''.join(r.get('text', '') for r in v.get('title', {}).get('runs', [])))
                 canal = ''.join(r.get('text', '') for r in v.get('ownerText', {}).get('runs', []))
                 if 'saber' not in titulo.lower() and 'icfes' not in titulo.lower():
                     continue
                 vistos.add(vid)
                 out.append({'id': vid, 'titulo': titulo[:110], 'canal': canal, 'area': area})
                 k += 1
-                if k >= (3 if area is None else 2):
+                if k >= (3 if area is None else 2) or sum(1 for x in out if x['area'] == area) >= (3 if area is None else 2):
                     break
         except Exception as e:
             print('error videos', q, e)
